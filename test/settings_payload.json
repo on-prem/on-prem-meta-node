@@ -1,0 +1,5 @@
+{
+    "token": "test-api-token",
+    "channel": "#general",
+    "jidometa_url": "https://test.local:8443"
+}

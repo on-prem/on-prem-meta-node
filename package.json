@@ -1,0 +1,34 @@
+{
+  "description": "Official On-Prem Meta REST API client and helper library",
+  "author": "Alexander Williams, Unscramble <license@unscramble.jp>",
+  "name": "on-prem-meta",
+  "version": "1.0.0",
+  "license": "MIT",
+  "main": "lib/on-prem-meta.js",
+  "private": false,
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/on-prem/on-prem-meta-node.git"
+  },
+  "scripts": {
+    "build": "coffee --no-header -c -o lib src/on-prem-meta.coffee",
+    "test": "node ./node_modules/mocha/bin/mocha -R spec --require coffeescript/register --check-leaks test/*.coffee",
+    "pretest": "coffee --no-header -c -o lib src/on-prem-meta.coffee"
+  },
+  "keywords": [
+    "on-prem",
+    "meta",
+    "api",
+    "library",
+    "REST"
+  ],
+  "dependencies": {
+    "form-data": "^3.0.0",
+    "needle": "^2.4.0"
+  },
+  "devDependencies": {
+    "coffeescript": "^2.4.1",
+    "mocha": "^6.2.2",
+    "should": "^13.2.3"
+  }
+}
