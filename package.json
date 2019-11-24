@@ -1,15 +1,15 @@
 {
   "description": "Official On-Prem Meta REST API client and helper library",
   "author": "Alexander Williams, Unscramble <license@unscramble.jp>",
-  "name": "on-prem-meta",
-  "version": "1.0.2",
+  "name": "@aw/on-prem-meta",
+  "version": "1.0.3",
   "license": "MIT",
   "homepage": "https://on-premises.com",
   "main": "lib/on-prem-meta.js",
   "private": false,
   "repository": {
     "type": "git",
-    "url": "https://github.com/on-prem/on-prem-meta-node.git"
+    "url": "git+https://github.com/on-prem/on-prem-meta-node.git"
   },
   "scripts": {
     "build": "coffee --no-header -c -o lib src/on-prem-meta.coffee",
@@ -37,5 +37,10 @@
   },
   "engines": {
     "node": ">=12"
+  },
+  "directories": {
+    "lib": "lib",
+    "src": "src",
+    "test": "test"
   }
 }
