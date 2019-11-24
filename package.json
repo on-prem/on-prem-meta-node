@@ -4,6 +4,7 @@
   "name": "on-prem-meta",
   "version": "1.0.0",
   "license": "MIT",
+  "homepage": "https://on-premises.com",
   "main": "lib/on-prem-meta.js",
   "private": false,
   "repository": {
@@ -30,5 +31,11 @@
     "coffeescript": "^2.4.1",
     "mocha": "^6.2.2",
     "should": "^13.2.3"
+  },
+  "bugs": {
+    "url": "https://github.com/on-prem/on-prem-meta-node/issues"
+  },
+  "engines": {
+    "node": ">=12"
   }
 }
