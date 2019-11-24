@@ -104,7 +104,7 @@ meta.buildRequest apiParams, (error, result) =>
 Make a `POST` request with a file upload and query parameters
 
 ```coffee
-postParams =
+apiParams =
   method: 'POST'
   endpoint: 'settings/license'
   files:
@@ -186,7 +186,7 @@ meta.buildRequest(apiParams, (error, result) => {
 Make a `POST` request with a file upload and query parameters
 
 ```js
-postParams = {
+apiParams = {
   method: 'POST',
   endpoint: 'settings/license',
   files: {

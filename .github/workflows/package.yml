@@ -32,15 +32,10 @@ jobs:
       - uses: actions/setup-node@v1
         with:
           node-version: 12.x
-          registry-url: https://registry.npmjs.org/
+          registry-url: 'https://registry.npmjs.org/'
       - name: Publish to NPM registry
-        run: |
-          npm ci
-          npm publish
+        run: npm publish
         env:
-          CI: true
-          ON_PREM_META_HOST: test.local:8443
-          ON_PREM_META_APITOKEN: yourtoken
           NODE_AUTH_TOKEN: ${{secrets.npm_token}}
 
   publish-gpr:
@@ -51,14 +46,11 @@ jobs:
       - uses: actions/setup-node@v1
         with:
           node-version: 12.x
-          registry-url: https://npm.pkg.github.com/
+          registry-url: 'https://npm.pkg.github.com/'
           scope: '@aw'
       - name: Publish to GitHub Package registry
         run: |
-          npm ci
+          npm config set scope "@aw"
           npm publish
         env:
-          CI: true
-          ON_PREM_META_HOST: test.local:8443
-          ON_PREM_META_APITOKEN: yourtoken
           NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
