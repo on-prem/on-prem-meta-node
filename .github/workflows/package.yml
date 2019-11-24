@@ -33,6 +33,7 @@ jobs:
         with:
           node-version: 12.x
           registry-url: 'https://registry.npmjs.org/'
+          scope: '@aw'
       - name: Publish to NPM registry
         run: |
           npm config set scope "@aw"
@@ -50,10 +51,10 @@ jobs:
         with:
           node-version: 12.x
           registry-url: 'https://npm.pkg.github.com/'
-          scope: '@aw'
+          scope: '@on-prem'
       - name: Publish to GitHub Package registry
         run: |
-          npm config set scope "@aw"
+          npm config set scope "@on-prem"
           npm publish --access public
         env:
           NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}

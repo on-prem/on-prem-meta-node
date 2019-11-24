@@ -2,7 +2,7 @@
   "description": "Official On-Prem Meta REST API client and helper library",
   "author": "Alexander Williams, Unscramble <license@unscramble.jp>",
   "name": "@aw/on-prem-meta",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "license": "MIT",
   "homepage": "https://on-premises.com",
   "main": "lib/on-prem-meta.js",

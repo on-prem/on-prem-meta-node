@@ -33,7 +33,7 @@ exports.settings = settings
 exports.options  = options
 
 needle.defaults
-  user_agent: 'nodeclient-on-prem-meta/1.0.3'
+  user_agent: 'nodeclient-on-prem-meta/1.0.4'
   response_timeout: 10000 # 10 seconds
 
 exports.buildRequest = (params = {method: 'GET', endpoint: 'version'}, callback) ->
