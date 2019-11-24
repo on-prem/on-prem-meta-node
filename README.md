@@ -17,7 +17,7 @@
 # Installation
 
 ```
-npm install @aw/on-prem-meta
+npm install @on-prem/on-prem-meta
 ```
 
 or

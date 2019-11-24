@@ -33,10 +33,10 @@ jobs:
         with:
           node-version: 12.x
           registry-url: 'https://registry.npmjs.org/'
-          scope: '@aw'
+          scope: '@on-prem'
       - name: Publish to NPM registry
         run: |
-          npm config set scope "@aw"
+          npm config set scope "@on-prem"
           npm publish --access public
         env:
           CI: true
