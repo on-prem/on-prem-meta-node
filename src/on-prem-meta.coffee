@@ -8,6 +8,11 @@ createHash = require('crypto').createHash
 createHmac = require('crypto').createHmac
 needle     = require 'needle'
 formData   = require 'form-data'
+fs         = require 'fs'
+
+needle.defaults
+  user_agent: 'nodeclient-on-prem-meta/1.1.0'
+  response_timeout: 10000 # 10 seconds
 
 exports.makeSHA256 = (string) ->
   createHash('sha256')
@@ -21,9 +26,9 @@ exports.makeHMAC = (string, key) ->
 
 # Global variables
 settings =
-  prefix: process.env.ON_PREM_META_PREFIX || "meta" # example: admin
-  host:     process.env.ON_PREM_META_HOST || throw "Environment variable 'ON_PREM_META_HOST' required" # example: meta.yourdomain.com:443
-  insecure: if process.env.ON_PREM_META_INSECURE is "true" then false else true
+  prefix:    process.env.ON_PREM_META_PREFIX || "meta" # example: admin
+  host:      process.env.ON_PREM_META_HOST || throw "Environment variable 'ON_PREM_META_HOST' required" # example: meta.yourdomain.com:443
+  insecure:  if process.env.ON_PREM_META_INSECURE is "true" then false else true
   tokenhash: this.makeSHA256 process.env.ON_PREM_META_APITOKEN || throw "Environment variable 'ON_PREM_META_APITOKEN' required" # example: yourtoken
 
 options =
@@ -31,10 +36,6 @@ options =
 
 exports.settings = settings
 exports.options  = options
-
-needle.defaults
-  user_agent: 'nodeclient-on-prem-meta/1.0.5'
-  response_timeout: 10000 # 10 seconds
 
 exports.buildRequest = (params = {method: 'GET', endpoint: 'version'}, callback) ->
   endpoint = "/api/v1/#{settings.prefix}/#{params.endpoint}"
@@ -73,3 +74,26 @@ exports.apiCall = (params, callback) ->
     params.options
     (err, res, data) ->
       return callback err, res, data
+
+# returns a callback with an error in arg1, or the builddate in arg2
+# the error is an Error object if non-HTTP related
+# the error is the request result if 404 or other HTTP error code (4xx or 5xx)
+exports.buildOVA = (application, parameters, callback) =>
+  apiParams =
+    method: 'POST'
+    endpoint: 'builds'
+    files:
+      app:
+        filename: 'app.tcz'
+        data: fs.readFileSync(application)
+    query: parameters
+
+  this.buildRequest apiParams, (error, result) =>
+    callback error if error
+    this.apiCall result, (err, res, data) ->
+      if err
+        callback new Error err
+      else if res.statusCode is 202 and res.statusMessage is 'Accepted'
+        callback null, data.builddate
+      else
+        callback data

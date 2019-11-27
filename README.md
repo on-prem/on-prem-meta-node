@@ -1,6 +1,6 @@
 # Official On-Prem Meta REST API client and helper library
 
-[![GitHub release](https://img.shields.io/github/release/on-prem/on-prem-meta-node.svg)](https://github.com/on-prem/on-prem-meta-node) ![Build status](https://github.com/on-prem/on-prem-meta-node/workflows/Node%20CI/badge.svg?branch=master) ![Downloads](http://img.shields.io/npm/dm/on-prem-meta.svg "On-Prem Meta")
+[![GitHub release](https://img.shields.io/github/release/on-prem/on-prem-meta-node.svg)](https://github.com/on-prem/on-prem-meta-node) ![Build status](https://github.com/on-prem/on-prem-meta-node/workflows/Node%20CI/badge.svg?branch=master)
 
   1. [Requirements](#requirements)
   2. [Installation](#installation)
@@ -11,7 +11,7 @@
 
 # Requirements
 
-  * NodeJS `v12.x` (tested)
+  * NodeJS `v8.x` to `v12.x` (tested)
   * This library requires the `needle` and `form-data` node modules
 
 # Installation
@@ -119,6 +119,22 @@ meta.buildRequest apiParams, (error, result) =>
       console.log data
 ```
 
+Build an OVA (returns the builddate)
+
+```coffee
+apiParams =
+  repo_name: 'your-appliance'
+  ova_type: 'server'
+  export_disks: 'raw,qcow2'
+
+meta.buildOVA "/path/to/your/app.tcz", apiParams, (err, res) ->
+  if err
+    console.error err
+    process.exit 1
+  else
+    console.log res
+```
+
 Change a NodeJS `http.request()` option (example: `family` (for IPv6))
 
 ```coffee
@@ -202,6 +218,25 @@ meta.buildRequest(apiParams, (error, result) => {
     return meta.apiCall(result, function(err, res, data) {
       return console.log(data);
     });
+  }
+});
+```
+
+Build an OVA (returns the builddate)
+
+```js
+apiParams = {
+  repo_name: 'your-appliance',
+  ova_type: 'server',
+  export_disks: 'raw,qcow2'
+};
+
+meta.buildOVA("/path/to/your/app.tcz", apiParams, function(err, res) {
+  if (err) {
+    console.error(err);
+    return process.exit(1);
+  } else {
+    return console.log(res);
   }
 });
 ```
