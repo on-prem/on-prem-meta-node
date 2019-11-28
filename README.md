@@ -54,7 +54,7 @@ To obtain an _On-Prem Meta_ OVA, please visit [https://on-premises.com](https://
 
 ## CoffeeScript
 
-1. Require the library as you would any other node module:
+#### 1. Require the library as you would any other node module:
 
 ```coffee
 meta = require 'on-prem-meta'
@@ -66,7 +66,7 @@ or
 meta = require './src/on-prem-meta'
 ```
 
-2. Define your request parameters
+#### 2. Define your request parameters
 
 ```coffee
 apiParams =
@@ -74,7 +74,7 @@ apiParams =
   endpoint: 'settings/license'
 ```
 
-3. Build an API request and make an API call
+#### 3. Build an API request and make an API call
 
 ```coffee
 meta.buildRequest apiParams, (error, result) =>
@@ -87,7 +87,7 @@ meta.buildRequest apiParams, (error, result) =>
 
 ### Examples
 
-Make a `GET` request with query parameters (ex: `&time=day`)
+#### Make a `GET` request with query parameters (ex: `&time=day`)
 
 ```coffee
 apiParams =
@@ -99,9 +99,23 @@ meta.buildRequest apiParams, (error, result) =>
   unless error
     meta.apiCall result, (err, res, data) ->
       console.log data
+
+coffee> {
+  logs: [
+    {
+      logdate: '1574834282.732987162',
+      id: '287e10307425d845',
+      location: 'web',
+      user: 'admin',
+      action: 'builds.create',
+      data: '1574834281.966265128'
+    }
+  ],
+  num: 1
+}
 ```
 
-Make a `POST` request with a file upload and query parameters
+#### Make a `POST` request with a file upload and query parameters
 
 ```coffee
 apiParams =
@@ -117,9 +131,11 @@ meta.buildRequest apiParams, (error, result) =>
   unless error
     meta.apiCall result, (err, res, data) ->
       console.log data
+
+coffee> { Status: '200 OK' }
 ```
 
-Build an OVA (returns the builddate)
+#### Build an OVA (returns the builddate)
 
 ```coffee
 apiParams =
@@ -133,12 +149,31 @@ meta.buildOVA "/path/to/your/app.tcz", apiParams, (err, res) ->
     process.exit 1
   else
     console.log res
+
+coffee> 1574834281.966265128
 ```
 
-Change a NodeJS `http.request()` option (example: `family` (for IPv6))
+#### Poll the status of an OVA (returns the status object)
 
 ```coffee
-meta.options.agent = new http.Agent { family: 6 }
+meta.pollStatus '1574834281.966265128', undefined, (err, res) ->
+  if err
+    console.error err
+    process.exit 1
+  else
+    console.log res
+
+coffee> {
+  status: 'success',
+  percentage: '100',
+  builddate: '1574834281.966265128'
+}
+```
+
+#### Change a NodeJS `http.request()` option (example: `family` (for IPv6))
+
+```coffee
+meta.options.agent = new https.Agent { family: 6 }
 meta.buildRequest undefined, (error, result) =>
   unless error
     meta.apiCall result, (err, res, data) ->
@@ -146,6 +181,8 @@ meta.buildRequest undefined, (error, result) =>
 ```
 
 ## NodeJS
+
+#### 1. Require the library as you would any other node module:
 
 ```js
 meta = require('on-prem-meta');
@@ -157,13 +194,13 @@ or
 meta = require('./lib/on-prem-meta');
 ```
 
-2. Define your request parameters
+#### 2. Define your request parameters
 
 ```js
 var apiParams = { method: 'GET', endpoint: 'settings/license' };
 ```
 
-3. Build an API request and make an API call
+#### 3. Build an API request and make an API call
 
 ```js
 meta.buildRequest(apiParams, (error, result) => {
@@ -179,7 +216,7 @@ meta.buildRequest(apiParams, (error, result) => {
 
 ### Examples
 
-Make a `GET` request with query parameters (ex: `&time=day`)
+#### Make a `GET` request with query parameters (ex: `&time=day`)
 
 ```js
 apiParams = {
@@ -199,7 +236,7 @@ meta.buildRequest(apiParams, (error, result) => {
 });
 ```
 
-Make a `POST` request with a file upload and query parameters
+#### Make a `POST` request with a file upload and query parameters
 
 ```js
 apiParams = {
@@ -222,7 +259,7 @@ meta.buildRequest(apiParams, (error, result) => {
 });
 ```
 
-Build an OVA (returns the builddate)
+#### Build an OVA (returns the builddate)
 
 ```js
 apiParams = {
@@ -241,10 +278,23 @@ meta.buildOVA("/path/to/your/app.tcz", apiParams, function(err, res) {
 });
 ```
 
-Change a NodeJS `http.request()` option (example: `family` (for IPv6))
+#### Poll the status of an OVA (returns the status object)
 
 ```js
-meta.options.agent = new http.Agent({ family: 6 });
+meta.pollStatus('1574834281.966265128', void 0, function(err, res) {
+    if (err) {
+      console.error(err);
+      return process.exit(1);
+    } else {
+      return console.log(res);
+    }
+  });
+```
+
+#### Change a NodeJS `http.request()` option (example: `family` (for IPv6))
+
+```js
+meta.options.agent = new https.Agent({ family: 6 });
 meta.buildRequest(void 0, (error, result) => {
   if (!error) {
     return meta.apiCall(result, function(err, res, data) {

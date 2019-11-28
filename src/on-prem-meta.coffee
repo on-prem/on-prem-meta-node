@@ -11,7 +11,7 @@ formData   = require 'form-data'
 fs         = require 'fs'
 
 needle.defaults
-  user_agent: 'nodeclient-on-prem-meta/1.1.0'
+  user_agent: 'nodeclient-on-prem-meta/1.2.0'
   response_timeout: 10000 # 10 seconds
 
 exports.makeSHA256 = (string) ->
@@ -97,3 +97,45 @@ exports.buildOVA = (application, parameters, callback) =>
         callback null, data.builddate
       else
         callback data
+
+exports.getStatus = (build, callback) =>
+  apiParams =
+    method: 'GET'
+    endpoint: 'builds/status'
+    query:
+      builddate: build
+      log: 0
+
+  this.buildRequest apiParams, (error, result) =>
+    callback error if error
+    this.apiCall result, (err, res, data) ->
+      if err
+        callback new Error err
+      else if res.statusCode is 202 and res.statusMessage is 'Accepted'
+        callback null, { status: 'queued' }
+      else if res.statusCode is 200 and data
+        callback null, data
+      else
+        callback data
+
+exports.pollStatus = (build, status = {}, callback) =>
+  switch status.status
+    when 'success', 'failed'
+      return status
+    else
+      this.getStatus build, (err, res) =>
+        if err
+          callback err
+        else
+          if res.status is 'success'
+            callback null, this.pollStatus build, res
+          else if res.status is 'failed'
+            callback this.pollStatus build, res
+          else
+            run = () =>
+              this.pollStatus build, res, (error, result) ->
+                callback error if error
+                callback null, result
+
+            # wait 5 seconds between each request
+            setTimeout run, 5000
