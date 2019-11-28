@@ -55,17 +55,18 @@ The following functions are exported:
 * `makeSHA256()` to generate an SHA256 string
 * `makeHMAC()` to generate an SHA256 HMAC from a string and key
 * `buildRequest()` to generate a request object to be sent to the `apiCall()` function
-* `apiCall()` to send the actual request object to the Meta API
+* `apiCall()` to send the actual request data to the Meta API
 * `buildOVA()` to build an OVA through the Meta API
 * `getStatus()` to obtain the status of an OVA build
 * `pollStatus()` to poll the status of an OVA build (every 5 seconds)
+* `getDownloads()` to obtain the list of download files for an OVA build
 
 See the usage docs below.
 
 # Usage
 
 1. [CoffeeScript](#coffeescript)
-2. [NodeJS](#nodejs)
+2. [JavaScript](#JavaScript)
 
 ## CoffeeScript
 
@@ -168,7 +169,7 @@ meta.buildOVA "/path/to/your/app.tcz", apiParams, (err, res) ->
 coffee> 1574834281.966265128
 ```
 
-#### Poll the status of an OVA (returns the status object)
+#### Poll the status of an OVA (returns the status)
 
 ```coffee
 meta.pollStatus '1574834281.966265128', undefined, (err, res) ->
@@ -178,11 +179,20 @@ meta.pollStatus '1574834281.966265128', undefined, (err, res) ->
   else
     console.log res
 
-coffee> {
-  status: 'success',
-  percentage: '100',
-  builddate: '1574834281.966265128'
-}
+coffee> success
+```
+
+#### Get the list of download URLs
+
+```coffee
+meta.getDownloads '1574834281.966265128', (err, res) ->
+  if err
+    console.error err
+    process.exit 1
+  else
+    console.log res
+
+coffee> https://yourdomain.com:443/downloads/build-1574834281.966265128/your-appliance-v1.2.3-release.ova
 ```
 
 #### Change a NodeJS `http.request()` option (example: `family` (for IPv6))
@@ -195,7 +205,7 @@ meta.buildRequest undefined, (error, result) =>
       console.log data
 ```
 
-## NodeJS
+## JavaScript
 
 #### 1. Require the library as you would any other node module:
 
@@ -297,6 +307,19 @@ meta.buildOVA("/path/to/your/app.tcz", apiParams, function(err, res) {
 
 ```js
 meta.pollStatus('1574834281.966265128', void 0, function(err, res) {
+    if (err) {
+      console.error(err);
+      return process.exit(1);
+    } else {
+      return console.log(res);
+    }
+  });
+```
+
+#### Get the list of download URLs
+
+```js
+meta.getDownloads('1574834281.966265128', function(err, res) {
     if (err) {
       console.error(err);
       return process.exit(1);

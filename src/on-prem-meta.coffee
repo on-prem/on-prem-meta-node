@@ -11,7 +11,7 @@ formData   = require 'form-data'
 fs         = require 'fs'
 
 needle.defaults
-  user_agent: 'nodeclient-on-prem-meta/1.2.0'
+  user_agent: 'nodeclient-on-prem-meta/1.3.0'
   response_timeout: 10000 # 10 seconds
 
 exports.makeSHA256 = (string) ->
@@ -118,10 +118,13 @@ exports.getStatus = (build, callback) =>
       else
         callback data
 
+# returns a callback with and error in arg1, or the status in arg2
+# the error is an Error object if non-HTTP related
+# the error is the request result if 404 or other HTTP error code (4xx or 5xx)
 exports.pollStatus = (build, status = {}, callback) =>
   switch status.status
     when 'success', 'failed'
-      return status
+      return status.status
     else
       this.getStatus build, (err, res) =>
         if err
@@ -130,7 +133,7 @@ exports.pollStatus = (build, status = {}, callback) =>
           if res.status is 'success'
             callback null, this.pollStatus build, res
           else if res.status is 'failed'
-            callback this.pollStatus build, res
+            callback null, this.pollStatus build, res
           else
             run = () =>
               this.pollStatus build, res, (error, result) ->
@@ -139,3 +142,25 @@ exports.pollStatus = (build, status = {}, callback) =>
 
             # wait 5 seconds between each request
             setTimeout run, 5000
+
+# returns a callback with an error in arg1, or the list of downloads in arg2
+# the error is an Error object if non-HTTP related
+# the error is the request result if 404 or other HTTP error code (4xx or 5xx)
+exports.getDownloads = (build, callback) =>
+  apiParams =
+    method: 'GET'
+    endpoint: 'downloads'
+    query:
+      builddate: build
+
+  this.buildRequest apiParams, (error, result) =>
+    callback error if error
+    this.apiCall result, (err, res, data) ->
+      if err
+        callback new Error err
+      else if res.statusCode is 200 and res.statusMessage is 'OK'
+        downloads = for i, url in data.downloads
+          "https://#{settings.host}#{i.url}"
+        callback null, downloads.join('\n')
+      else
+        callback data
