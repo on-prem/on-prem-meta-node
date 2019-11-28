@@ -5,9 +5,10 @@
   1. [Requirements](#requirements)
   2. [Installation](#installation)
   3. [Environment](#environment)
-  4. [Usage](#usage)
-  5. [Testing](#testing)
-  6. [License](#license)
+  4. [Functions](#functions)
+  5. [Usage](#usage)
+  6. [Testing](#testing)
+  7. [License](#license)
 
 # Requirements
 
@@ -46,6 +47,20 @@ To manage the _Admin API_ instead of the _Meta API_:
 * `export ON_PREM_META_PREFIX=admin`
 
 To obtain an _On-Prem Meta_ OVA, please visit [https://on-premises.com](https://on-premises.com)
+
+# Functions
+
+The following functions are exported:
+
+* `makeSHA256()` to generate an SHA256 string
+* `makeHMAC()` to generate an SHA256 HMAC from a string and key
+* `buildRequest()` to generate a request object to be sent to the `apiCall()` function
+* `apiCall()` to send the actual request object to the Meta API
+* `buildOVA()` to build an OVA through the Meta API
+* `getStatus()` to obtain the status of an OVA build
+* `pollStatus()` to poll the status of an OVA build (every 5 seconds)
+
+See the usage docs below.
 
 # Usage
 
