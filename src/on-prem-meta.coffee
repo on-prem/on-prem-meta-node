@@ -11,7 +11,7 @@ formData   = require 'form-data'
 fs         = require 'fs'
 
 needle.defaults
-  user_agent: 'nodeclient-on-prem-meta/1.3.0'
+  user_agent: 'nodeclient-on-prem-meta/1.4.0'
   response_timeout: 10000 # 10 seconds
 
 exports.makeSHA256 = (string) ->
@@ -162,5 +162,25 @@ exports.getDownloads = (build, callback) =>
         downloads = for i, url in data.downloads
           "https://#{settings.host}#{i.url}"
         callback null, downloads.join('\n')
+      else
+        callback data
+
+# returns a callback with an error in arg1, or 'OK' in arg2
+# the error is an Error object if non-HTTP related
+# the error is the request result if 404 or other HTTP error code (4xx or 5xx)
+exports.cancelBuild = (build, callback) =>
+  apiParams =
+    method: 'POST'
+    endpoint: 'builds/cancel'
+    query:
+      builddate: build
+
+  this.buildRequest apiParams, (error, result) =>
+    callback error if error
+    this.apiCall result, (err, res, data) ->
+      if err
+        callback new Error err
+      else if res.statusCode is 200 and res.statusMessage is 'OK'
+        callback null, res.statusMessage
       else
         callback data
