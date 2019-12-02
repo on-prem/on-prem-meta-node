@@ -59,6 +59,7 @@ The following functions are exported:
 
 The following helper functions are exported:
 
+* `getVersion()` to get the version of the Meta or Admin appliance
 * `buildOVA()` to build an OVA through the Meta API
 * `getStatus()` to obtain the status of an OVA build
 * `pollStatus()` to poll the status of an OVA build (every 5 seconds)
